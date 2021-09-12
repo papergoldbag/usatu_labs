@@ -76,13 +76,15 @@ void clear_last_line_console(){
 }
 
 
-void bubble_sort(int *nums, int size){
+int bubble_sort(int *nums, int size){
+    int c = 0;
     bool swapped;
     for(int i = 0; i < size-1; i++){
         swapped = false;
         for (int j = 0; j < size - 1 - i; j++){
             if (nums[j] > nums[j+1]){
                 swap(&nums[j], &nums[j+1]);
+                c += 1;
                 clear_last_line_console();
                 print_color_array(nums, size, j, j+1);
                 swapped = true;
@@ -92,6 +94,25 @@ void bubble_sort(int *nums, int size){
         if (!swapped)break;
     }
     printf("\n");
+    return c;
+}
+
+
+int isertion_sort(int *nums, int size){
+    int c = 0;
+    for (int i = 1; i < size; i++){
+        for (int j = i; j > 0; j--){
+            if (nums[j-1] > nums[j]){
+                swap(&nums[j], &nums[j-1]);
+                c += 1;
+                clear_last_line_console();
+                print_color_array(nums, size, j-1, j);
+                sleep_micro(600);
+            }else break;
+        }
+    }
+    printf("\n");
+    return c;
 }
 
 
@@ -110,17 +131,19 @@ int main(){
     print_array(nums, NUMS_SIZE);
 
     int sort_num = 0;
-    printf("Put Algo num\n1) Bubble sort\nAlgo num: ");
+    printf("Put algorithm num\n1) Bubble sort\n2) Isertion Sort\n3) Quick sort\nAlgo num: ");
     scanf("%d", &sort_num);
+    int c_operations = 0;
     switch (sort_num) {
         case 1:
-            bubble_sort(nums, NUMS_SIZE);
+            c_operations = bubble_sort(nums, NUMS_SIZE);
             break;
         case 2:
-            printf("2");
+            c_operations = isertion_sort(nums, NUMS_SIZE);
             break;
     }
     clear_last_line_console();
+    printf("Operations amount is %d\n", c_operations);
     printf("Sorted nums: ");
     print_array(nums, NUMS_SIZE);
 
