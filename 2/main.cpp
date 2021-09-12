@@ -116,6 +116,15 @@ int isertion_sort(int *nums, int size){
 }
 
 
+int quick_sort(int *nums, int size){
+    int i = 0;
+    int j = 0;
+    int left = 0,
+    int right = 0;
+    int middle = 0;
+}
+
+
 const int NUMS_SIZE = 15;
 
 
@@ -147,5 +156,6 @@ int main(){
     printf("Sorted nums: ");
     print_array(nums, NUMS_SIZE);
 
+    system("pause");
     return 0;
 }
