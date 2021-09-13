@@ -110,12 +110,28 @@ int isertion_sort(int *nums, int size){
                 swap(&nums[j], &nums[j-1]);
                 c += 1;
                 clear_last_line_console();
-                print_color_array(nums, size, j-1, j);
+
+                for (int k = 0; k < size; k++){
+                    if (k == j-1){
+                        set_color(Green);
+                    }else if (k == j){
+                        set_color(Yellow);
+                    }
+                    else if (k <= i){
+                        set_color(Red);
+                    }else{
+                        set_color(White);
+                    }
+                    printf("%d ", nums[k]);
+                    set_color(White);
+                }
+
                 printf("  | %d", c);
                 sleep_micro(MICROSEC_SLEEP_TIME);
             }else break;
         }
     }
+    set_color(White);
     return c;
 }
 
@@ -135,9 +151,8 @@ int quick_sort(int *nums, int size, int from_i, int to_i)
         {
             swap(&nums[i], &nums[j]);
             quick_sort_c++;
-            clear_last_line_console();
-            print_color_array(nums, size, j-1, j);
-            printf("  | %d", quick_sort_c);
+            print_color_array(nums, size, j, i);
+            printf("  | %d\n", quick_sort_c);
             sleep_micro(MICROSEC_SLEEP_TIME);
             i++;
             j--;
