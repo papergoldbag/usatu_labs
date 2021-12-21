@@ -223,7 +223,7 @@ int main(){
   printf("\n");
 
   // check
-  printf("Проверка\n");
+  printf("Проверка\n\n");
 
   // A * X
   double ** matrix_ax = multiply_matrixes(matrix_a, matrix_x, matrix_a_strings, matrix_a_strings, matrix_a_strings, matrix_b_columns);
