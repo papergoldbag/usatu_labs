@@ -146,22 +146,19 @@ double **multiply_matrixes(double **matrix_a, double **matrix_b, int a_strings, 
 
 double ** minus_matrixes(double **matrix_a, double **matrix_b, int strings, int columns){
   double ** matrix = create_matrix(strings, columns);
-  for (int i = 0; i<strings; i++){
-    for (int j = 0; j<strings; j++){
+  for (int i = 0; i<strings; i++)
+    for (int j = 0; j<strings; j++)
       matrix[i][j] = matrix_a[i][j] - matrix_b[i][j];
-    }
-  }
   return matrix;
 }
 
 
 double ** sum_matrixes(double **matrix_a, double **matrix_b, int strings, int columns){
+  // NOT USE
   double ** matrix = create_matrix(strings, columns);
-  for (int i = 0; i<strings; i++){
-    for (int j = 0; j<strings; j++){
+  for (int i = 0; i<strings; i++)
+    for (int j = 0; j<strings; j++)
       matrix[i][j] = matrix_a[i][j] + matrix_b[i][j];
-    }
-  }
   return matrix;
 }
 
