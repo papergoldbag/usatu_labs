@@ -77,16 +77,15 @@ double det(double **matrix, int size) {
     for (int i = 0; i < size; i++) determinant *= temp_matrix[i][i];
 
     remove_matrix(temp_matrix, size);
-    if (determinant == 0 || determinant == -0) determinant = 0;
+    if ((int)determinant == 0 || (int)determinant == -0) determinant = 0;
     return determinant;
 }
 
 
 double **inverse_matrix(double **matrix, int size) {
-    double temp, **temp_matrix, **result_matrix;
-    temp = 0;
-    temp_matrix = create_matrix(size, size);
-    result_matrix = create_matrix(size, size);
+    double temp = 0;
+    double** temp_matrix = create_matrix(size, size);
+    double** result_matrix = create_matrix(size, size);
 
     for (int i = 0; i < size; i++)
         for (int j = 0; j < size; j++) {
@@ -178,8 +177,11 @@ int main(){
   scanf("%d", &matrix_a_input_mode);
   if (matrix_a_input_mode == 1){
     input_matrix(matrix_a, matrix_a_strings, matrix_a_columns);
-  }else{
+  }else if (matrix_a_input_mode == 2){
     input_rand_matrix(matrix_a, matrix_a_strings, matrix_a_columns);
+  }else{
+    perror("Choose only 1 or 2");
+    exit(-1);
   }
 
   printf("Матрица A:\n");
@@ -195,8 +197,11 @@ int main(){
   scanf("%d", &matrix_b_input_mode);
   if (matrix_b_input_mode == 1){
     input_matrix(matrix_b, matrix_a_strings, matrix_b_columns);
-  }else{
+  }else if (matrix_b_input_mode == 2){
     input_rand_matrix(matrix_b, matrix_a_strings, matrix_b_columns);
+  }else{
+    perror("Choose only 1 or 2");
+    exit(-1);
   }
   printf("Матрица B:\n");
   print_matrix(matrix_b, matrix_a_strings, matrix_b_columns);
@@ -247,6 +252,5 @@ int main(){
   print_matrix(matrix_inv_a_mul_a, matrix_a_strings, matrix_a_strings);
   printf("\n");
 
-  printf("\n");
   return 0;
 }
