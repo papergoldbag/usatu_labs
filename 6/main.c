@@ -4,12 +4,12 @@
 
 
 double* create_array(int size){
-  return (double*) calloc(size, sizeof(double));
+  return (double*) malloc(size*sizeof(double));
 }
 
 
 double** create_matrix(int strings, int columns){
-  double **matrix = (double**)calloc(strings, sizeof(double*));
+  double **matrix = (double**)malloc(strings*sizeof(double*));
   for (int i = 0; i < strings; i++){
     matrix[i] = create_array(columns);
   }
@@ -147,7 +147,7 @@ double **multiply_matrixes(double **matrix_a, double **matrix_b, int a_strings, 
 double ** minus_matrixes(double **matrix_a, double **matrix_b, int strings, int columns){
   double ** matrix = create_matrix(strings, columns);
   for (int i = 0; i<strings; i++)
-    for (int j = 0; j<strings; j++)
+    for (int j = 0; j<columns; j++)
       matrix[i][j] = matrix_a[i][j] - matrix_b[i][j];
   return matrix;
 }
@@ -157,7 +157,7 @@ double ** sum_matrixes(double **matrix_a, double **matrix_b, int strings, int co
   // NOT USE
   double ** matrix = create_matrix(strings, columns);
   for (int i = 0; i<strings; i++)
-    for (int j = 0; j<strings; j++)
+    for (int j = 0; j<columns; j++)
       matrix[i][j] = matrix_a[i][j] + matrix_b[i][j];
   return matrix;
 }
@@ -180,7 +180,6 @@ int main(){
     perror("Choose only 1 or 2");
     exit(-1);
   }
-
   printf("Матрица A:\n");
   print_matrix(matrix_a, matrix_a_strings, matrix_a_columns);
   printf("\n");
@@ -248,6 +247,15 @@ int main(){
   printf("(A^-1)*A:\n");
   print_matrix(matrix_inv_a_mul_a, matrix_a_strings, matrix_a_strings);
   printf("\n");
+
+  // clear memory
+  remove_matrix(matrix_a, matrix_a_strings);
+  remove_matrix(matrix_b, matrix_a_strings);
+  remove_matrix(matrix_x, matrix_a_strings);
+  remove_matrix(matrix_ax, matrix_a_strings);
+  remove_matrix(matrix_ax_minus_b, matrix_a_strings);
+  remove_matrix(matrix_a_mul_inv_a, matrix_a_strings);
+  remove_matrix(matrix_inv_a_mul_a, matrix_a_strings);
 
   return 0;
 }
