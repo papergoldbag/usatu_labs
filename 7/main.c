@@ -16,12 +16,12 @@ void remove_matrix(int** matrix, int size){
 
 
 int* create_array(int size){
-  return (int*) malloc(size*sizeof(int));
+  return (int*) calloc(size, sizeof(int));
 }
 
 
 int** create_matrix(int size){
-  int **matrix = (int**)malloc(size*sizeof(int*));
+  int **matrix = (int**)calloc(size, sizeof(int*));
   for (int i = 0; i < size; i++){
     matrix[i] = create_array(size);
   }
@@ -32,7 +32,9 @@ int** create_matrix(int size){
 int** copy_matrix(int** matrix, int size){
   int **copy_matrix = create_matrix(size);
   for (int i = 0; i<size; i++){
-    memcpy(copy_matrix[i], matrix[i], size*sizeof(int*));
+    for (int j = 0; j < size; j++){
+      copy_matrix[i][j] = matrix[i][j];
+    }
   }
   return copy_matrix;
 }
@@ -79,7 +81,7 @@ void input_file_matrix(char *filename, int** matrix, int size){
 
   for (int i = 0; i < size; i++)
     for (int j = 0; j < size; j++)
-        fscanf(file, "%d ", &matrix[i][j]);
+      fscanf(file, "%d ", &matrix[i][j]);
 
   fclose(file);
 }
@@ -93,13 +95,38 @@ void matrix_to_file(char *filename, int** matrix, int size){
   }
 
   for (int i = 0; i < size; i++){
-    for (int j = 0; j < size; j++)
+    for (int j = 0; j < size; j++){
       fprintf(file, "%d ", matrix[i][j]);
+    }
     fprintf(file, "\n");
   }
 
   fclose(file);
-  printf("Матрица записана в файле %s\n", filename);
+}
+
+
+void print_moves(int **matrix, int **mkr, int size){
+  int i1;
+  for (int i = 0; i < size; i++){
+    for (int j = 0; j < size; j++){
+      if (i == j || matrix[i][j] == mkr[i][j])
+        continue;
+
+      printf("%d -> %d (%d):\n %d ->", i, j, mkr[i][j], i);
+
+      i1 = i;
+      do{
+        for (int k = 0; k < size; k++){
+          if ((matrix[i1][k] > 0) && ((matrix[i1][k] + mkr[k][j]) == mkr[i1][j]) || (k == j) && (matrix[i1][k] == mkr[i1][j])){
+            printf("   %d (%d)->", k, matrix[i1][k]);
+            i1 = k;
+            break;
+          }
+        }
+      } while (i1 != j);
+      printf("\b\b \n");
+    }
+  }
 }
 
 
@@ -134,6 +161,7 @@ int main(){
   printf("Задать значения элементов матрицы А вручную(1), случайным образом(2) или файлом(3)?");
   scanf("%d", &input_mode);
   if (input_mode == 1){
+    printf("Если дороги нет, то пишите -1\n");
     input_matrix(matrix, size);
   }else if (input_mode == 2){
     input_rand_matrix(matrix, size);
@@ -147,14 +175,20 @@ int main(){
   print_matrix(matrix, size);
 
   // Floyd process
-  int ** floyd_matrix = floydmatrix(matrix, size);
+  char *filename_output = "./matrix_output.txt";
+  int ** mkr = floydmatrix(matrix, size);
   printf("Матрица кратчайших расстояний:\n");
-  print_matrix(floyd_matrix, size);
-  matrix_to_file("./matrix_output.txt", floyd_matrix, size);
+  print_matrix(mkr, size);
+  matrix_to_file(filename_output, mkr, size);
+  printf("Матрица кратчайших расстояний записана в файле %s\n", filename_output);
+
+  // moves
+  printf("Составные пути:\n");
+  print_moves(matrix, mkr, size);
 
   // removing dy arrays
   remove_matrix(matrix, size);
-  remove_matrix(floyd_matrix, size);
+  remove_matrix(mkr, size);
 
   return 0;
 }
