@@ -146,7 +146,7 @@ int main(){
   printf("Исходная матрица:\n");
   print_matrix(matrix, size);
 
-  // Floyd
+  // Floyd process
   int ** floyd_matrix = floydmatrix(matrix, size);
   printf("Матрица кратчайших расстояний:\n");
   print_matrix(floyd_matrix, size);
