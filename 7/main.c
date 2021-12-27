@@ -168,7 +168,8 @@ int main(){
   }else if (input_mode == 3){
     input_file_matrix("./input_matrix.txt", matrix, size);
   }else{
-    return -1;
+    perror("Доступны только 1, 2 и 3");
+    exit(-1);
   }
 
   printf("Исходная матрица:\n");
