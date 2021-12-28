@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 // Strlen
@@ -123,13 +124,17 @@ void Strcpy2(char* dst, char* src){
   *dst = '\0';
 }
 
-char Strcpy3(char *dst, const char *src)
+void Strcpy3(char *dst, const char *src)
 {
   int i;
   for (i=0; src[i] != '\0'; ++i)
     dst[i] = src[i];
   dst[i]= '\0';
 }
+
+void Strcpy4(char* dst, char* src ){
+     while((*dst++ = *src++));
+  }
 
 void tests_strcpy(char* src){
   char* dest;
@@ -140,11 +145,125 @@ void tests_strcpy(char* src){
 
   Strcpy2(dest, src);
   printf("Strcpy2(dest, \"%s\")\n", src);
-  printf("dest=\"%s\"", dest);
+  printf("dest=\"%s\"\n", dest);
 
   Strcpy3(dest, src);
   printf("Strcpy3(dest, \"%s\")\n", src);
+  printf("dest=\"%s\"\n", dest);
+
+  Strcpy4(dest, src);
+  printf("Strcpy4(dest, \"%s\")\n", src);
   printf("dest=\"%s\"", dest);
+}
+
+
+// Strpos and Strstr
+char *Strstr1(char *str, char *substring){
+    char *a;
+    char *b;
+
+    b = substring;
+
+    if (*b == 0) {
+        return (char *) str;
+    }
+
+    for ( ; *str != 0; str += 1) {
+        if (*str != *b) {
+            continue;
+        }
+
+        a = str;
+        while (1) {
+            if (*b == 0) {
+                return (char *) str;
+            }
+            if (*a++ != *b++) {
+                break;
+            }
+        }
+        b = substring;
+    }
+
+    return NULL;
+}
+
+int Strpos1(char *haystack, char *needle){
+   char *p = Strstr1(haystack, needle);
+   if (p != NULL)
+      return p - haystack;
+   return -1;
+}
+
+char *Strstr2(char *str, char *substring)
+{
+  char *a = str, *b = substring;
+  for (;;) {
+    if ( !*b ) return (char *) str;
+    if ( !*a ) return NULL;
+    if ( *a++ != *b++) { a = ++str; b = substring; }
+  }
+}
+
+int Strpos2(char *haystack, char *needle){
+   char *p = Strstr2(haystack, needle);
+   if (p != NULL)
+      return p - haystack;
+   return -1;
+}
+
+char *Strstr3(char *str, char *substring)
+{
+  char *a, *b = substring;
+
+  if ( !*b ) return (char *) str;
+  for ( ; *str ; str++) {
+    if (*str != *b) continue;
+    a = str;
+    for (;;) {
+      if ( !*b ) return (char *) str;
+      if (*a++ != *b++) break;
+    }
+    b = substring;
+  }
+  return NULL;
+}
+
+int Strpos3(char *haystack, char *needle){
+   char *p = Strstr3(haystack, needle);
+   if (p != NULL)
+      return p - haystack;
+   return -1;
+}
+
+char *Strstr4(char *s1, char *s2)
+{
+    size_t n = strlen(s2);
+    while(*s1)
+        if(!memcmp(s1++,s2,n))
+            return (char *) (s1-1);
+    return 0;
+}
+
+int Strpos4(char *haystack, char *needle){
+   char *p = Strstr4(haystack, needle);
+   if (p != NULL)
+      return p - haystack;
+   return -1;
+}
+
+void tests_strpos(char* src, char* sub){
+  int pos1 = Strpos1(src, sub);
+  printf("Strpos1(\"%s\", \"%s\")=%d\n", src, sub, pos1);
+
+  int pos2 = Strpos2(src, sub);
+  printf("Strpos2(\"%s\", \"%s\")=%d\n", src, sub, pos2);
+
+  int pos3 = Strpos3(src, sub);
+  printf("Strpos3(\"%s\", \"%s\")=%d\n", src, sub, pos3);
+
+  int pos4 = Strpos4(src, sub);
+  printf("Strpos4(\"%s\", \"%s\")=%d\n", src, sub, pos4);
 }
 
 
@@ -183,6 +302,25 @@ int main(){
   printf("\n\n");
   printf("2)Src не пуста\n");
   tests_strcpy("Hello");
+  printf("\n\n");
+
+  printf("1) Src пуста и Sub пуста\n");
+  tests_strpos("", "");
+  printf("\n\n");
+  printf("2) Src пуста и Sub не пуста, вхождений в src нет\n");
+  tests_strpos("", "aaaa");
+  printf("\n\n");
+  printf("3) Src не пуста и Sub пуста\n");
+  tests_strpos("aaaa", "");
+  printf("\n\n");
+  printf("4) Src не пуста и Sub не пуста, вхождений в src нет\n");
+  tests_strpos("aaaa", "bbb");
+  printf("\n\n");
+  printf("5) Src не пуста и Sub не пуста, вхождение есть\n");
+  tests_strpos("aaaa asfas as bbb as ass", "bbb");
+  printf("\n\n");
+  printf("6) Src не пуста и Sub не пуста, вхождение есть\n");
+  tests_strpos("bbb asfas as bbb as ass", "bbb");
   printf("\n\n");
 
   return 0;
