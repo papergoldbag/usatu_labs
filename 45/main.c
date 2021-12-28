@@ -123,6 +123,14 @@ void Strcpy2(char* dst, char* src){
   *dst = '\0';
 }
 
+char Strcpy3(char *dst, const char *src)
+{
+  int i;
+  for (i=0; src[i] != '\0'; ++i)
+    dst[i] = src[i];
+  dst[i]= '\0';
+}
+
 void tests_strcpy(char* src){
   char* dest;
 
@@ -132,6 +140,10 @@ void tests_strcpy(char* src){
 
   Strcpy2(dest, src);
   printf("Strcpy2(dest, \"%s\")\n", src);
+  printf("dest=\"%s\"", dest);
+
+  Strcpy3(dest, src);
+  printf("Strcpy3(dest, \"%s\")\n", src);
   printf("dest=\"%s\"", dest);
 }
 
