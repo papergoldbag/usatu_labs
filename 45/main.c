@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
+
+
+// additional funcs
+int schet(int n){
+    int count = 1;
+    while ( n = n / 10 )
+        count++;
+    return count;
+}
 
 
 // Strlen
@@ -263,7 +273,59 @@ void tests_strpos(char* src, char* sub){
   printf("Strpos3(\"%s\", \"%s\")=%d\n", src, sub, pos3);
 
   int pos4 = Strpos4(src, sub);
-  printf("Strpos4(\"%s\", \"%s\")=%d\n", src, sub, pos4);
+  printf("Strpos4(\"%s\", \"%s\")=%d", src, sub, pos4);
+}
+
+
+// Strcut
+char* Strcut1(int n, ...){
+  char* full_string = (char*)calloc(n, sizeof(char));
+  char* string;
+  int add_pos = 0;
+  va_list args;
+  va_start(args, n);
+  for(int i = 0; i<n; i++){
+    string = va_arg(args, char *);
+    strcpy(full_string+add_pos, string);
+    add_pos += strlen(string);
+  }
+  va_end(args);
+
+  return full_string;
+}
+
+void test_strcut(){
+  // char** strings = (char**)calloc(n, sizeof(char*));
+  // va_list arg_strings;
+  // int len_syms = 0;
+  // va_start(arg_strings, n);
+  // for (int i=0; i<n; i++){
+  //   strings[i] = va_arg(arg_strings, char*);
+  //   len_syms += strlen(strings[i]);
+  // }
+  // va_end(arg_strings);
+  //
+  // int n_schet = schet(n);
+  // char arg_s[len_syms+n*2+n_schet+2];
+  // int add_pos = 0;
+  //
+  // char n_s[n_schet];
+  // sprintf(n_s, "%d", n);
+  // char *start_s = strcat(n_s, ", ");
+  // strcpy(arg_s+add_pos, start_s);
+  // add_pos += strlen(start_s);
+  //
+  // for (int i=0; i<n; i++){
+  //   strcpy(arg_s+add_pos, strings[i]);
+  //   add_pos+=strlen(strings[i]);
+  //   if (i!=n-1){
+  //     strcpy(arg_s+add_pos, ", ");
+  //     add_pos+=2;
+  //   }
+  // }
+
+  char *ss = Strcut1(5, "A", "B", "C", "D", "E");
+  printf("%s\n", ss);
 }
 
 
@@ -322,6 +384,12 @@ int main(){
   printf("6) Src не пуста и Sub не пуста, вхождение есть\n");
   tests_strpos("bbb asfas as bbb as ass", "bbb");
   printf("\n\n");
+  printf("7) Src не пуста и Sub не пуста, вхождение есть\n");
+  tests_strpos("asfas as as ass bbb", "bbb");
+  printf("\n\n");
+
+  printf("Test\n");
+  test_strcut();
 
   return 0;
 }
