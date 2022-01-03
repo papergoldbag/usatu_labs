@@ -294,49 +294,86 @@ char* Strcut1(int n, ...){
   return full_string;
 }
 
-void test_strcut(){
-  // char** strings = (char**)calloc(n, sizeof(char*));
-  // va_list arg_strings;
-  // int len_syms = 0;
-  // va_start(arg_strings, n);
-  // for (int i=0; i<n; i++){
-  //   strings[i] = va_arg(arg_strings, char*);
-  //   len_syms += strlen(strings[i]);
-  // }
-  // va_end(arg_strings);
-  //
-  // int n_schet = schet(n);
-  // char arg_s[len_syms+n*2+n_schet+2];
-  // int add_pos = 0;
-  //
-  // char n_s[n_schet];
-  // sprintf(n_s, "%d", n);
-  // char *start_s = strcat(n_s, ", ");
-  // strcpy(arg_s+add_pos, start_s);
-  // add_pos += strlen(start_s);
-  //
-  // for (int i=0; i<n; i++){
-  //   strcpy(arg_s+add_pos, strings[i]);
-  //   add_pos+=strlen(strings[i]);
-  //   if (i!=n-1){
-  //     strcpy(arg_s+add_pos, ", ");
-  //     add_pos+=2;
-  //   }
-  // }
+char* Strcut2(int n, ...){
+  char* full_string = (char*)calloc(n, sizeof(char));
+  char* string;
+  int add_pos = 0;
+  va_list args;
+  va_start(args, n);
+  for(int i = 0; i<n; i++){
+    string = va_arg(args, char *);
+    Strcpy1(full_string+add_pos, string);
+    add_pos += strlen(string);
+  }
+  va_end(args);
 
-  char *ss = Strcut1(5, "A", "B", "C", "D", "E");
-  printf("%s\n", ss);
+  return full_string;
+}
+
+char* Strcut3(int n, ...){
+  char* full_string = (char*)calloc(n, sizeof(char));
+  char* string;
+  int add_pos = 0;
+  va_list args;
+  va_start(args, n);
+  for(int i = 0; i<n; i++){
+    string = va_arg(args, char *);
+    Strcpy2(full_string+add_pos, string);
+    add_pos += strlen(string);
+  }
+  va_end(args);
+
+  return full_string;
+}
+
+void test_strcut(){
+  printf("1) Есть пустые\n");
+  char *a = Strcut1(5, "A", "", "CCC", "DDDD", "EEEEE");
+  printf("Strcut1(%d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")=\"%s\"\n", 5, "A", "", "CCC", "DDDD", "EEEEE", a);
+  char *b = Strcut2(5, "A", "", "CCC", "DDDD", "EEEEE");
+  printf("Strcut2(%d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")=\"%s\"\n", 5, "A", "", "CCC", "DDDD", "EEEEE", b);
+  char *c = Strcut3(5, "A", "", "CCC", "DDDD", "EEEEE");
+  printf("Strcut3(%d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")=\"%s\"\n\n", 5, "A", "", "CCC", "DDDD", "EEEEE", c);
+
+  printf("2) Нет пустых\n");
+  a = Strcut1(3, "A", "GGG", "CCC");
+  printf("Strcut1(%d, \"%s\", \"%s\", \"%s\")=\"%s\"\n", 3, "A", "GGG", "CCC", a);
+  b = Strcut2(5, "A", "asf", "CCC", "DDDD", "EEEEE");
+  printf("Strcut2(%d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")=\"%s\"\n", 5, "A", "asf", "CCC", "DDDD", "EEEEE", b);
+  c = Strcut3(5, "A", "asf", "CCC", "DDDD", "EEEEE");
+  printf("Strcut3(%d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")=\"%s\"", 5, "A", "asf", "CCC", "DDDD", "EEEEE", c);
+}
+
+
+// Strdel
+char* Strdel1(char*s, int p, int k) {
+  char *res = (char *)calloc(strlen(s), sizeof(char));
+  int index = 0;
+  for(int i = 0; i<strlen(s); i++){
+    if((i<p) || (k<=i)) {
+      res[index] = s[i];
+      index++;
+    }
+  }
+  return res;
+}
+
+void tests_strdel(char *s, int pos, int n){
+  char *s1 = Strdel1(s, pos, n);
+  printf("Strdel1(\"%s\", %d, %d)=\"%s\";", s, pos, n, s1);
 }
 
 
 int main(){
+  printf("---Strlen---\n");
   printf("1)Пустая строка\n");
   tests_strlen("");
   printf("\n\n");
   printf("2)Не пустая строка\n");
   tests_strlen("Hello world");
-  printf("\n\n");
+  printf("\n\n\n");
 
+  printf("---Strcmp---\n");
   printf("1) Сравнение с пустой строкой\n");
   tests_strcmp("aaaaa", "");
   printf("\n\n");
@@ -357,15 +394,17 @@ int main(){
   printf("\n\n");
   printf("7) Обе строки равны\n");
   tests_strcmp("aaaaa", "aaaaa");
-  printf("\n\n");
+  printf("\n\n\n");
 
+  printf("---Strcpy---\n");
   printf("1)Src пуста\n");
   tests_strcpy("");
   printf("\n\n");
   printf("2)Src не пуста\n");
   tests_strcpy("Hello");
-  printf("\n\n");
+  printf("\n\n\n");
 
+  printf("---Strpos---\n");
   printf("1) Src пуста и Sub пуста\n");
   tests_strpos("", "");
   printf("\n\n");
@@ -386,10 +425,19 @@ int main(){
   printf("\n\n");
   printf("7) Src не пуста и Sub не пуста, вхождение есть\n");
   tests_strpos("asfas as as ass bbb", "bbb");
-  printf("\n\n");
+  printf("\n\n\n");
 
-  printf("Test\n");
+  printf("---Strcut---\n");
   test_strcut();
+  printf("\n\n\n");
+
+  printf("---Strdel---\n");
+  printf("1) Строка пуста\n");
+  tests_strdel("", 0, 3);
+  printf("\n\n");
+  printf("2) Строка не пуста\n");
+  tests_strdel("Hello", 0, 3);
+  printf("\n\n\n");
 
   return 0;
 }
